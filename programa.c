@@ -186,19 +186,19 @@ void eliminarcancion(){
 void buscarporartista(char artista[]){
    int encontrado=0;
 
-   for(int i=0; i<totalCanciones; i++){
-     if(strcmp(biblioteca[i].artista, artista)==0){
+    for(int i=0; i<totalCanciones; i++){
+    if(strcmp(biblioteca[i].artista, artista)==0){
 
-        printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
-        printf("Género: %s\n", biblioteca[i].genero);
+    printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
+    printf("Género: %s\n", biblioteca[i].genero);
         
         encontrado=1;
      }
 
    }
 
-   if(encontrado==0){
-        printf("Artista no encontrado\n");
+    if(encontrado==0){
+    printf("Artista no encontrado\n");
    }
 
 }
@@ -208,52 +208,52 @@ void buscarporgenero(char genero[]){
     int encontrado=0;
 
     for(int i=0; i<totalCanciones; i++){
-        if(strcmp(biblioteca[i].genero, genero)==0){
+    if(strcmp(biblioteca[i].genero, genero)==0){
 
-            printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
-            printf("Artista: %s\n", biblioteca[i].artista);
+    printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
+    printf("Artista: %s\n", biblioteca[i].artista);
 
             encontrado=1;
         }
     }
     
     if(encontrado==0){
-        printf("Género no enocntrado\n");
+    printf("Género no enocntrado\n");
     }
 }
 
 //función para canción más reproducida
 void masreproduccion(){
     if(totalCanciones==0){
-        printf("No hay canciones para mostrar\n");
+    printf("No hay canciones para mostrar\n");
         return;
     }
 
     int max=0;
 
     for(int i=1; i<totalCanciones; i++){
-        if(biblioteca[i].reproducciones > biblioteca[max].reproducciones){
+    if(biblioteca[i].reproducciones > biblioteca[max].reproducciones){
         max=i;
         }
     }
-    printf("\nLa canción más reproducida es: %s\n", biblioteca[max].titulo);
+    printf("\nCanción más reproducida: %s\n", biblioteca[max].titulo);
     printf("\nNúmero de reproducciones: %d\n", biblioteca[max].reproducciones);
 }
 
 //función para canción menos reproducida
 void menosreproduccion(){
     if(totalCanciones==0){
-        printf("No hay canciones para mostrar\n");
-        return;
+    printf("No hay canciones para mostrar\n");
+    return;
     }
 
     int min=0;
 
     for(int i=1; i<totalCanciones; i++){
-        if(biblioteca[i].reproducciones < biblioteca[min].reproducciones){
+    if(biblioteca[i].reproducciones < biblioteca[min].reproducciones){
         min=i;
         }
     }
-    printf("\nLa canción menos reproducida es: %s\n", biblioteca[min].titulo);
+    printf("\nCanción menos reproducida: %s\n", biblioteca[min].titulo);
     printf("\nNúmero de reproducciones: %d\n", biblioteca[min].reproducciones);
 }
