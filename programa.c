@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 //Definición de la estructura de una canción
 
@@ -7,10 +8,11 @@ typedef struct{
     char artista[100];
     char genero[50];
     int duracion;
+    int reproducciones;
 }cancion;
 
 
-//Definicion del arreglo que servirá de biblioteca
+//Definición del arreglo que servirá de biblioteca
 #define MAX 100
 cancion biblioteca[100];
 int totalCanciones = 0;
@@ -24,6 +26,11 @@ void agregarcancion();
 void mostrarlistado();
 void eliminarcancion();
 
+//Funciones mod "consulta"
+void buscarporartista(char artista[]);
+void buscarporgenero(char genero[]);
+void masreproduccion();
+void menosreproduccion();
 
 int main(){
     int opcion; 
@@ -87,7 +94,42 @@ void menugestion(){
 
 }
 void menuconsultar(){
-    printf("2");
+    int opcion;
+    char artista[100];
+    char genero[50];
+
+    do{
+    printf("\n---Consultas---\nIngresa una opción del menú: \n");
+    printf("1.-Buscar por artista.\n");
+    printf("2.-Buscar por género.\n");
+    printf("3.-Más reproducciones.\n");
+    printf("4.-Menos reproducciones.\n");
+    printf("5.-Salir.\n");
+    scanf("%d", &opcion);
+
+    switch(opcion){
+        case 1:
+        printf("Ingresa artista: ");
+        scanf(" %[^\n]", artista);
+        buscarporartista(artista);
+        break;
+        case 2:
+        printf("Ingresa género: ");
+        scanf(" %[^\n]", genero);
+        buscarporgenero(genero);
+        break;
+        case 3:
+        masreproduccion();
+        break;
+        case 4:
+        menosreproduccion();
+        break;
+        default:
+        printf("\nIngresa una ocpión válida.\n");
+        break;
+        }
+    }while(opcion!=5);
+
 
 }
 void menuestadisticas(){
@@ -113,7 +155,9 @@ void agregarcancion(){
 
     printf("Duración: ");
     scanf(" %d", &biblioteca[totalCanciones].duracion);
-
+    
+    printf("Reproducciones: ");
+    scanf("%d", &biblioteca[totalCanciones].reproducciones); 
     totalCanciones++;
 }
 
@@ -126,7 +170,7 @@ void mostrarlistado() {
     }
 
     for (int i = 0; i < totalCanciones; i++) {
-        printf("\nCancion %d:\n", i + 1);
+        printf("\nCanción %d:\n", i + 1);
         printf("Titulo: %s\n", biblioteca[i].titulo);
         printf("Artista: %s\n", biblioteca[i].artista);
         printf("Genero: %s\n", biblioteca[i].genero);
@@ -138,3 +182,78 @@ void eliminarcancion(){
     printf("4");
 }
 
+//función para buscar por artista
+void buscarporartista(char artista[]){
+   int encontrado=0;
+
+   for(int i=0; i<totalCanciones; i++){
+     if(strcmp(biblioteca[i].artista, artista)==0){
+
+        printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
+        printf("Género: %s\n", biblioteca[i].genero);
+        
+        encontrado=1;
+     }
+
+   }
+
+   if(encontrado==0){
+        printf("Artista no encontrado\n");
+   }
+
+}
+
+//función buscar por género
+void buscarporgenero(char genero[]){
+    int encontrado=0;
+
+    for(int i=0; i<totalCanciones; i++){
+        if(strcmp(biblioteca[i].genero, genero)==0){
+
+            printf("\nNombre de la canción: %s\n", biblioteca[i].titulo);
+            printf("Artista: %s\n", biblioteca[i].artista);
+
+            encontrado=1;
+        }
+    }
+    
+    if(encontrado==0){
+        printf("Género no enocntrado\n");
+    }
+}
+
+//función para canción más reproducida
+void masreproduccion(){
+    if(totalCanciones==0){
+        printf("No hay canciones para mostrar\n");
+        return;
+    }
+
+    int max=0;
+
+    for(int i=1; i<totalCanciones; i++){
+        if(biblioteca[i].reproducciones > biblioteca[max].reproducciones){
+        max=i;
+        }
+    }
+    printf("\nLa canción más reproducida es: %s\n", biblioteca[max].titulo);
+    printf("\nNúmero de reproducciones: %d\n", biblioteca[max].reproducciones);
+}
+
+//función para canción menos reproducida
+void menosreproduccion(){
+    if(totalCanciones==0){
+        printf("No hay canciones para mostrar\n");
+        return;
+    }
+
+    int min=0;
+
+    for(int i=1; i<totalCanciones; i++){
+        if(biblioteca[i].reproducciones < biblioteca[min].reproducciones){
+        min=i;
+        }
+    }
+    printf("\nLa canción menos reproducida es: %s\n", biblioteca[min].titulo);
+    printf("\nNúmero de reproducciones: %d\n", biblioteca[min].reproducciones);
+}
