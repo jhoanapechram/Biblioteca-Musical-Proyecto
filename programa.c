@@ -12,7 +12,7 @@ typedef struct{
 
 //Definicion del arreglo que servirá de biblioteca
 #define MAX 100
-cancion biblioteca[100];
+cancion biblioteca[MAX];
 int totalCanciones = 0;
 
 
