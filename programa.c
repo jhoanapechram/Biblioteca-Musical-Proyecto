@@ -22,11 +22,12 @@ int totalCanciones = 0;
 void menugestion();
 void menuconsultar();
 void menuestadisticas();
+//gestion
 void agregarcancion();
 void mostrarlistado();
 void eliminarcancion();
 
-//Funciones mod "consulta"
+//consulta
 void buscarporartista(char artista[]);
 void buscarporgenero(char genero[]);
 void mostrarreproducciones();
@@ -51,7 +52,7 @@ int main(){
         menuestadisticas();
         break;
         case 4:
-        break;
+        break;4
         default:
         printf("\nIngresa una opción válida.\n");
         break;
@@ -173,9 +174,40 @@ void mostrarlistado() {
     }
 }
 
+
+//función para eliminar canciones
+
 void eliminarcancion(){
-    printf("4");
+    if(totalCanciones == 0){
+    printf("No hay canciones.\n");
+    return;
+    }
+
+    char titulo[100];
+    printf("Ingresa el título de la canción a eliminar: ");
+    scanf(" %[^\n]", titulo);
+
+    int pos = -1;
+    for(int i=0; i< totalCanciones; i++){
+        if (strcmp(biblioteca[i].titulo, titulo) == 0){
+            pos = i;
+            break;
+        }
+    }
+
+    if(pos == -1){
+        printf("Canción no encontrada.\n");
+        return;
+    }
+
+    for(int i= pos; i < totalCanciones -1; i++){
+        biblioteca[i] = biblioteca[i+1];
+    }
+
+    totalCanciones--;
+    printf("La canción se ha eliminado con éxito.\n");
 }
+
 
 //función para buscar por artista
 void buscarporartista(char artista[]){
