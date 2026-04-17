@@ -52,7 +52,7 @@ int main(){
         menuestadisticas();
         break;
         case 4:
-        break;4
+        break;
         default:
         printf("\nIngresa una opción válida.\n");
         break;
