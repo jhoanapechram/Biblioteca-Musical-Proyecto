@@ -32,6 +32,13 @@ void buscarporartista(char artista[]);
 void buscarporgenero(char genero[]);
 void mostrarreproducciones();
 
+//estadisticas
+void promediaduracion();
+void porcentajegenero();
+void masreproducida();
+void menosreproducida();
+void totalminutos();
+
 int main(){
     int opcion; 
     do{
@@ -129,7 +136,42 @@ void menuconsultar(){
 
 }
 void menuestadisticas(){
-    printf("3");
+    int opcion;
+
+    do{
+        printf("\n---Estadísticas---\n");
+        printf("1.- Promedio de duración.\n");
+        printf("2.- Porcentaje por género.\n");
+        printf("3.- Canción más reproducida.\n");
+        printf("4.- Canción menos reproducida.\n");
+        printf("5.- Total de minutos almacenados.\n");
+        printf("6.- Salir.\n");
+        scanf("%d", &opcion);
+
+        switch(opcion){
+            case 1:
+                promediaduracion();
+                break;
+            case 2:
+                porcentajegenero();
+                break;
+            case 3:
+                masreproducida();
+                break;
+            case 4:
+                menosreproducida();
+                break;
+            case 5:
+                totalminutos();
+                break;
+            case 6:
+                break;
+            default:
+                printf("Ingresa una opción válida.\n");
+                break;
+        }
+    }while(opcion!=6);
+}
 
 }
 
@@ -215,7 +257,7 @@ void buscarporartista(char artista[]){
 
     for(int i=0; i<totalCanciones; i++){
     if(strcmp(biblioteca[i].artista, artista)==0){
-
+        
     printf("Nombre de la canción: %s\n", biblioteca[i].titulo);
     printf("Género: %s\n", biblioteca[i].genero);
         
