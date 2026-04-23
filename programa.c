@@ -32,6 +32,13 @@ void buscarporartista(char artista[]);
 void buscarporgenero(char genero[]);
 void mostrarreproducciones();
 
+//estadisticas
+void promediaduracion();
+void porcentajegenero();
+void masreproducida();
+void menosreproducida();
+void totalminutos();
+
 int main(){
     int opcion; 
     do{
@@ -120,6 +127,8 @@ void menuconsultar(){
         case 3: 
         mostrarreproducciones();
         break;
+        case 4:
+        break;
         default:
         printf("\nIngresa una opción válida.\n");
         break;
@@ -129,8 +138,42 @@ void menuconsultar(){
 
 }
 void menuestadisticas(){
-    printf("3");
+    int opcion;
 
+    do{
+        printf("\n---Estadísticas---\n");
+        printf("1.- Promedio de duración.\n");
+        printf("2.- Porcentaje por género.\n");
+        printf("3.- Canción más reproducida.\n");
+        printf("4.- Canción menos reproducida.\n");
+        printf("5.- Total de minutos.\n");
+        printf("6.- Salir.\n");
+        scanf("%d", &opcion);
+
+        switch(opcion){
+            case 1:
+                promediaduracion();
+                break;
+            case 2:
+                porcentajegenero();
+                break;
+            case 3:
+                masreproducida();
+                break;
+            case 4:
+                menosreproducida();
+                break;
+            case 5:
+                totalminutos();
+                break;
+            case 6:
+                break;
+            default:
+                printf("\nIngresa una opción válida.\n");
+                break;
+        }
+
+    }while(opcion != 6);
 }
 
 //función para agregar canciones a la biblioteca
@@ -261,3 +304,105 @@ void mostrarreproducciones(){
     }
 }
 
+// duracion promedio
+void promediaduracion(){
+    if(totalCanciones == 0){
+        printf("No hay canciones.\n");
+        return;
+    }
+
+    int suma = 0;
+
+    for(int i = 0; i < totalCanciones; i++){
+        suma += biblioteca[i].duracion;
+    }
+
+    float promedio = (float)suma / totalCanciones;
+
+    printf("El promedio de duración es: %.2f minutos\n", promedio);
+}
+
+// porcentaje por género
+void porcentajegenero(){
+    if(totalCanciones == 0){
+        printf("No hay canciones.\n");
+        return;
+    }
+
+    int pop = 0, rock = 0, jazz = 0, otros = 0;
+
+    for(int i = 0; i < totalCanciones; i++){
+        if(strcmp(biblioteca[i].genero, "pop") == 0){
+            pop++;
+        }else if(strcmp(biblioteca[i].genero, "rock") == 0){
+            rock++;
+        }else if(strcmp(biblioteca[i].genero, "jazz") == 0){
+            jazz++;
+        }else{
+            otros++;
+        }
+    }
+
+    printf("\nPorcentaje por género:\n");
+    printf("Pop: %.2f%%\n", (pop * 100.0) / totalCanciones);
+    printf("Rock: %.2f%%\n", (rock * 100.0) / totalCanciones);
+    printf("Jazz: %.2f%%\n", (jazz * 100.0) / totalCanciones);
+    printf("Otros: %.2f%%\n", (otros * 100.0) / totalCanciones);
+}
+
+// canción más reproducida
+void masreproducida(){
+    if(totalCanciones == 0){
+        printf("No hay canciones.\n");
+        return;
+    }
+
+    int pos = 0;
+
+    for(int i = 1; i < totalCanciones; i++){
+        if(biblioteca[i].reproducciones > biblioteca[pos].reproducciones){
+            pos = i;
+        }
+    }
+
+    printf("\nCanción más reproducida:\n");
+    printf("Título: %s\n", biblioteca[pos].titulo);
+    printf("Reproducciones: %d\n", biblioteca[pos].reproducciones);
+}
+
+//canción menos reproducida
+void menosreproducida(){
+    if(totalCanciones == 0){
+        printf("No hay canciones.\n");
+        return;
+    }
+
+    int pos = 0;
+
+    // buscamos la menor cantidad de reproducciones
+    for(int i = 1; i < totalCanciones; i++){
+        if(biblioteca[i].reproducciones < biblioteca[pos].reproducciones){
+            pos = i;
+        }
+    }
+
+    printf("\nCanción menos reproducida:\n");
+    printf("Título: %s\n", biblioteca[pos].titulo);
+    printf("Reproducciones: %d\n", biblioteca[pos].reproducciones);
+}
+
+// total minutos
+void totalminutos(){
+    if(totalCanciones == 0){
+        printf("No hay canciones.\n");
+        return;
+    }
+
+    int suma = 0;
+
+    for(int i = 0; i < totalCanciones; i++){
+        suma += biblioteca[i].duracion;
+    }
+
+    printf("Total de minutos almacenados: %d\n", suma);
+}
