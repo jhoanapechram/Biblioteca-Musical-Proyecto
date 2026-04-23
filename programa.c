@@ -2,7 +2,6 @@
 #include <string.h>
 
 //Definición de la estructura de una canción
-
 typedef struct{
     char titulo[100];
     char artista[100];
@@ -11,132 +10,173 @@ typedef struct{
     int reproducciones;
 }cancion;
 
-
 //Definición del arreglo que servirá de biblioteca
 #define MAX 100
 cancion biblioteca[MAX];
 int totalCanciones = 0;
 
-
 //Prototipos de función
-void menugestion();
+
 void menuconsultar();
 void menuestadisticas();
 //gestion
 void agregarcancion();
 void mostrarlistado();
 void eliminarcancion();
-
 //consulta
 void buscarporartista(char artista[]);
 void buscarporgenero(char genero[]);
 void mostrarreproducciones();
-
 //estadisticas
 void promediaduracion();
 void porcentajegenero();
 void masreproducida();
 void menosreproducida();
 void totalminutos();
+//archivos
+void cargarBiblioteca();
+void guardarBiblioteca();
 
 int main(){
-    int opcion; 
+    cargarBiblioteca(); // Carga las canciones guardadas al iniciar
+
+    int opcion;
     do{
-    printf("\n---Bienvenido a la Biblioteca Musical---\nIngresa una opción del menú: \n");
-    printf("1.- Gestionar canciones.\n");
-    printf("2.- Hacer una consulta.\n");
-    printf("3.- Visualizar estadísticas.\n");
-    printf("4.- Salir.\n");
-    scanf("%d", &opcion);
-    switch(opcion){
-        case 1:
-        menugestion();
-        break;
-        case 2:
-        menuconsultar();
-        break;
-        case 3:
-        menuestadisticas();
-        break;
-        case 4:
-        break;
-        default:
-        printf("\nIngresa una opción válida.\n");
-        break;
-    }
+        printf("\n---Bienvenido a la Biblioteca Musical---\nIngresa una opciÃ³n del menÃº: \n");
+        printf("1.- Gestionar canciones.\n");
+        printf("2.- Hacer una consulta.\n");
+        printf("3.- Visualizar estadÃ­sticas.\n");
+        printf("4.- Salir.\n");
+        scanf("%d", &opcion);
+        switch(opcion){
+            case 1:
+                menugestion();
+                break;
+            case 2:
+                menuconsultar();
+                break;
+            case 3:
+                menuestadisticas();
+                break;
+            case 4:
+                break;
+            default:
+                printf("\nIngresa una opciÃ³n vÃ¡lida.\n");
+                break;
+        }
     }while(opcion!=4);
 
-
-return 0;
-
+    guardarBiblioteca(); // Guarda todas las canciones al salir
+    return 0;
 }
+
+
+	//FUNCIONES DE ARCHIVO 
+
+void cargarBiblioteca(){
+    FILE *archivo = fopen("biblioteca.csv", "r");
+    if(archivo == NULL) return; // Si no existe el archivo, no pasa nada
+
+    while(fscanf(archivo, " %99[^,],%99[^,],%49[^,],%d,%d\n",
+        biblioteca[totalCanciones].titulo,
+        biblioteca[totalCanciones].artista,
+        biblioteca[totalCanciones].genero,
+        &biblioteca[totalCanciones].duracion,
+        &biblioteca[totalCanciones].reproducciones) == 5){
+        totalCanciones++;
+        if(totalCanciones >= MAX) break;
+    }
+
+    fclose(archivo);
+    printf("Biblioteca cargada: %d canciÃ³n(es) encontrada(s).\n", totalCanciones);
+}
+
+void guardarBiblioteca(){
+    FILE *archivo = fopen("biblioteca.csv", "w");
+    if(archivo == NULL){
+        printf("Error: no se pudo guardar la biblioteca.\n");
+        return;
+    }
+
+    for(int i = 0; i < totalCanciones; i++){
+        fprintf(archivo, "%s,%s,%s,%d,%d\n",
+            biblioteca[i].titulo,
+            biblioteca[i].artista,
+            biblioteca[i].genero,
+            biblioteca[i].duracion,
+            biblioteca[i].reproducciones);
+    }
+
+    fclose(archivo);
+    printf("Biblioteca guardada con éxito.\n");
+}
+
+// MENUS
 
 void menugestion(){
     int opcion;
-     do{
-    printf("\n---Gestión Musical---\nIngresa una opción del menú: \n");
-    printf("1.- Ver listado de canciones.\n");
-    printf("2.- Agregar canción.\n");
-    printf("3.- Eliminar canción.\n");
-    printf("4.- Salir.\n");
-    scanf("%d", &opcion);
-    switch(opcion){
-        case 1:
-        mostrarlistado();
-        break;
-        case 2:
-        agregarcancion();
-        break;
-        case 3:
-        eliminarcancion();
-        break;
-        case 4:
-        break;
-        default:
-        printf("\nIngresa una ocpión válida.\n");
-        break;
-    }
+    do{
+        printf("\n---Gestión Musical---\nIngresa una opción del menú: \n");
+        printf("1.- Ver listado de canciones.\n");
+        printf("2.- Agregar canción.\n");
+        printf("3.- Eliminar canción.\n");
+        printf("4.- Salir.\n");
+        scanf("%d", &opcion);
+        switch(opcion){
+            case 1:
+                mostrarlistado();
+                break;
+            case 2:
+                agregarcancion();
+                break;
+            case 3:
+                eliminarcancion();
+                break;
+            case 4:
+                break;
+            default:
+                printf("\nIngresa una opciÃ³n vÃ¡lida.\n");
+                break;
+        }
     }while(opcion!=4);
-
-
 }
+
 void menuconsultar(){
     int opcion;
     char artista[100];
     char genero[50];
 
     do{
-    printf("\n---Consultas---\nIngresa una opción del menú: \n");
-    printf("1.-Buscar por artista.\n");
-    printf("2.-Buscar por género.\n");
-    printf("3.-Mostrar reproducciones\n");
-    printf("4.-Salir.\n");
-    scanf("%d", &opcion);
+        printf("\n---Consultas---\nIngresa una opción del menú: \n");
+        printf("1.-Buscar por artista.\n");
+        printf("2.-Buscar por género.\n");
+        printf("3.-Mostrar reproducciones\n");
+        printf("4.-Salir.\n");
+        scanf("%d", &opcion);
 
-    switch(opcion){
-        case 1:
-        printf("Ingresa artista: ");
-        scanf(" %[^\n]", artista);
-        buscarporartista(artista);
-        break;
-        case 2:
-        printf("Ingresa género: ");
-        scanf(" %[^\n]", genero);
-        buscarporgenero(genero);
-        break;
-        case 3: 
-        mostrarreproducciones();
-        break;
-        case 4:
-        break;
-        default:
-        printf("\nIngresa una opción válida.\n");
-        break;
+        switch(opcion){
+            case 1:
+                printf("Ingresa artista: ");
+                scanf(" %[^\n]", artista);
+                buscarporartista(artista);
+                break;
+            case 2:
+                printf("Ingresa género: ");
+                scanf(" %[^\n]", genero);
+                buscarporgenero(genero);
+                break;
+            case 3:
+                mostrarreproducciones();
+                break;
+            case 4:
+                break;
+            default:
+                printf("\nIngresa una opción válida.\n");
+                break;
         }
     }while(opcion!=4);
-
-
 }
+
 void menuestadisticas(){
     int opcion;
 
@@ -172,11 +212,10 @@ void menuestadisticas(){
                 printf("\nIngresa una opción válida.\n");
                 break;
         }
-
     }while(opcion != 6);
 }
 
-//función para agregar canciones a la biblioteca
+// GESTION
 void agregarcancion(){
     if(totalCanciones>=MAX){
         printf("La biblioteca está llena.\n");
@@ -192,38 +231,36 @@ void agregarcancion(){
     printf("Género: ");
     scanf(" %[^\n]", biblioteca[totalCanciones].genero);
 
-    printf("Duración: ");
+    printf("Duración (minutos): ");
     scanf(" %d", &biblioteca[totalCanciones].duracion);
-    
+
     printf("Reproducciones: ");
-    scanf("%d", &biblioteca[totalCanciones].reproducciones); 
+    scanf("%d", &biblioteca[totalCanciones].reproducciones);
+
     totalCanciones++;
+    guardarBiblioteca(); // Guarda inmediatamente despuÃ©s de agregar
 }
 
-
-//función para mostrar listado de canciones 
-void mostrarlistado() {
-    if (totalCanciones == 0) {
+void mostrarlistado(){
+    if(totalCanciones == 0){
         printf("No hay canciones\n");
         return;
     }
 
-    for (int i = 0; i < totalCanciones; i++) {
+    for(int i = 0; i < totalCanciones; i++){
         printf("\nCanción %d:\n", i + 1);
         printf("Titulo: %s\n", biblioteca[i].titulo);
         printf("Artista: %s\n", biblioteca[i].artista);
         printf("Genero: %s\n", biblioteca[i].genero);
-        printf("Duracion: %d\n", biblioteca[i].duracion);
+        printf("Duracion: %d min\n", biblioteca[i].duracion);
+        printf("Reproducciones: %d\n", biblioteca[i].reproducciones);
     }
 }
 
-
-//función para eliminar canciones
-
 void eliminarcancion(){
     if(totalCanciones == 0){
-    printf("No hay canciones.\n");
-    return;
+        printf("No hay canciones.\n");
+        return;
     }
 
     char titulo[100];
@@ -231,8 +268,8 @@ void eliminarcancion(){
     scanf(" %[^\n]", titulo);
 
     int pos = -1;
-    for(int i=0; i< totalCanciones; i++){
-        if (strcmp(biblioteca[i].titulo, titulo) == 0){
+    for(int i=0; i < totalCanciones; i++){
+        if(strcmp(biblioteca[i].titulo, titulo) == 0){
             pos = i;
             break;
         }
@@ -243,68 +280,63 @@ void eliminarcancion(){
         return;
     }
 
-    for(int i= pos; i < totalCanciones -1; i++){
+    for(int i = pos; i < totalCanciones - 1; i++){
         biblioteca[i] = biblioteca[i+1];
     }
 
     totalCanciones--;
     printf("La canción se ha eliminado con éxito.\n");
+    guardarBiblioteca(); // Guarda inmediatamente después de eliminar
 }
 
+// CONSULTAS
 
-//función para buscar por artista
 void buscarporartista(char artista[]){
-   int encontrado=0;
+    int encontrado = 0;
 
-    for(int i=0; i<totalCanciones; i++){
-    if(strcmp(biblioteca[i].artista, artista)==0){
-
-    printf("Nombre de la canción: %s\n", biblioteca[i].titulo);
-    printf("Género: %s\n", biblioteca[i].genero);
-        
-        encontrado=1;
-     }
-
-   }
-
-    if(encontrado==0){
-    printf("Artista no encontrado\n");
-   }
-
-}
-
-//función buscar por género
-void buscarporgenero(char genero[]){
-    int encontrado=0;
-
-    for(int i=0; i<totalCanciones; i++){
-    if(strcmp(biblioteca[i].genero, genero)==0){
-
-    printf("Nombre de la canción: %s\n", biblioteca[i].titulo);
-    printf("Artista: %s\n", biblioteca[i].artista);
-
-            encontrado=1;
+    for(int i = 0; i < totalCanciones; i++){
+        if(strcmp(biblioteca[i].artista, artista) == 0){
+            printf("Nombre de la canciÃ³n: %s\n", biblioteca[i].titulo);
+            printf("Género: %s\n", biblioteca[i].genero);
+            encontrado = 1;
         }
     }
-    
-    if(encontrado==0){
-    printf("Género no encontrado\n");
+
+    if(encontrado == 0){
+        printf("Artista no encontrado\n");
     }
 }
 
-//función para mostrar reproducciones canciones
+void buscarporgenero(char genero[]){
+    int encontrado = 0;
+
+    for(int i = 0; i < totalCanciones; i++){
+        if(strcmp(biblioteca[i].genero, genero) == 0){
+            printf("Nombre de la canción: %s\n", biblioteca[i].titulo);
+            printf("Artista: %s\n", biblioteca[i].artista);
+            encontrado = 1;
+        }
+    }
+
+    if(encontrado == 0){
+        printf("Género no encontrado\n");
+    }
+}
+
 void mostrarreproducciones(){
-    if(totalCanciones==0){
-    printf("No hay canciones para mostrar\n");
+    if(totalCanciones == 0){
+        printf("No hay canciones para mostrar\n");
         return;
     }
-    for(int i=0; i<totalCanciones; i++){
-    printf("Canción: %s\n", biblioteca[i].titulo);
-    printf("Número de reproducciones: %d\n", biblioteca[i].reproducciones);
+
+    for(int i = 0; i < totalCanciones; i++){
+        printf("Canción: %s\n", biblioteca[i].titulo);
+        printf("NÃºmero de reproducciones: %d\n", biblioteca[i].reproducciones);
     }
 }
 
-// duracion promedio
+// ESTADÍSTICAS
+
 void promediaduracion(){
     if(totalCanciones == 0){
         printf("No hay canciones.\n");
@@ -312,17 +344,14 @@ void promediaduracion(){
     }
 
     int suma = 0;
-
     for(int i = 0; i < totalCanciones; i++){
         suma += biblioteca[i].duracion;
     }
 
     float promedio = (float)suma / totalCanciones;
-
     printf("El promedio de duración es: %.2f minutos\n", promedio);
 }
 
-// porcentaje por género
 void porcentajegenero(){
     if(totalCanciones == 0){
         printf("No hay canciones.\n");
@@ -350,7 +379,6 @@ void porcentajegenero(){
     printf("Otros: %.2f%%\n", (otros * 100.0) / totalCanciones);
 }
 
-// canción más reproducida
 void masreproducida(){
     if(totalCanciones == 0){
         printf("No hay canciones.\n");
@@ -358,7 +386,6 @@ void masreproducida(){
     }
 
     int pos = 0;
-
     for(int i = 1; i < totalCanciones; i++){
         if(biblioteca[i].reproducciones > biblioteca[pos].reproducciones){
             pos = i;
@@ -366,11 +393,10 @@ void masreproducida(){
     }
 
     printf("\nCanción más reproducida:\n");
-    printf("Título: %s\n", biblioteca[pos].titulo);
+    printf("TÃ­tulo: %s\n", biblioteca[pos].titulo);
     printf("Reproducciones: %d\n", biblioteca[pos].reproducciones);
 }
 
-//canción menos reproducida
 void menosreproducida(){
     if(totalCanciones == 0){
         printf("No hay canciones.\n");
@@ -378,20 +404,17 @@ void menosreproducida(){
     }
 
     int pos = 0;
-
-    // buscamos la menor cantidad de reproducciones
     for(int i = 1; i < totalCanciones; i++){
         if(biblioteca[i].reproducciones < biblioteca[pos].reproducciones){
             pos = i;
         }
     }
 
-    printf("\nCanción menos reproducida:\n");
+    printf("\nCanciÃ³n menos reproducida:\n");
     printf("Título: %s\n", biblioteca[pos].titulo);
     printf("Reproducciones: %d\n", biblioteca[pos].reproducciones);
 }
 
-// total minutos
 void totalminutos(){
     if(totalCanciones == 0){
         printf("No hay canciones.\n");
@@ -399,7 +422,6 @@ void totalminutos(){
     }
 
     int suma = 0;
-
     for(int i = 0; i < totalCanciones; i++){
         suma += biblioteca[i].duracion;
     }
